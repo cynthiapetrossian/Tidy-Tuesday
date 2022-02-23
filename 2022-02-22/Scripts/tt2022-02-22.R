@@ -32,7 +32,8 @@ map1 <- ggplot(mapdata, aes(x = long, #use mapdata dataset, set x axis to longit
                             y = lat, #set y axis to latitude
                             group = group))+ #uses group value in mapdata, makes sure countries fit together
   geom_polygon(aes(fill = Civil_Liberties), color = "black")+ #set geom to polygon, fill countries with Civil Liberties data, set border colors to black
-  labs(title = "Civil Liberty Scores in the Greater Middle East (2020)")+ #change title
+  labs(title = "Civil Liberty Scores in the Greater Middle East (2020)",
+       caption = "Source: United Nations and Freedom House")+ #change title
   theme(axis.text.x = element_blank(), #remove x axis text
         axis.text.y = element_blank(), #remove y axis text
         axis.ticks = element_blank(), #remove axis ticks
