@@ -1,0 +1,59 @@
+---
+title: "Tidy Tuesday 2022-03-22"
+author: "Cynthia Petrossian"
+date: "3/22/2022"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.path = "../Outputs/")
+```
+
+# Load Libraries
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+library(here)
+```
+
+# Read In Data
+```{r}
+babynames <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-22/babynames.csv')
+view(babynames)
+```
+
+# Data Wrangling
+```{r}
+Cynthia <- babynames %>% 
+  filter(name == "Cynthia",
+         sex == "F")
+view(Cynthia)
+```
+
+# Making A Plot
+```{r Cynthia}
+Cynthia %>% 
+  ggplot(aes(x = year,
+             y = n))+
+  geom_area(fill = "orange")+
+  labs(title = "Popularity of the Name 'Cynthia' Over the Years",
+       subtitle = "1880 - 2017",
+       x = "Year",
+       y = "Raw Count of Births",
+       caption = "Source: babynames R Package")+
+  theme(plot.background = element_rect(fill = "#1E2B3C"),
+        panel.background = element_rect(fill = "#1E2B3C"),
+        axis.text = element_text(color = "white"),
+        plot.title = element_text(color = "white",
+                                  size = 15),
+        plot.subtitle = element_text(color = "white"),
+        axis.title = element_text(color = "white"),
+        plot.caption = element_text(color = "white"))
+```
+
