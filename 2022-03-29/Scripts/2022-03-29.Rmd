@@ -1,0 +1,51 @@
+---
+title: "Tidy Tuesday 2022-03-29"
+author: "Cynthia Petrossian"
+date: "3/22/2022"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.path = "../Outputs/")
+```
+
+# Load Libraries
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+```
+
+# Read In Data
+```{r}
+sports <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-03-29/sports.csv')
+view(sports)
+```
+
+# Data Wrangling
+```{r}
+csun <- sports %>% 
+  filter(institution_name == "California State University-Northridge", sum_partic_women > 0, year == 2019)
+view(csun)
+```
+
+# Making A Plot
+```{r women}
+csun %>% 
+  ggplot()+
+  geom_col(aes(x = sports,
+             y = sum_partic_women),
+           fill = "pink")+
+  scale_x_discrete(guide = guide_axis(n.dodge=3))+
+  labs(title = "Number of Women Participants in Sports at California State University, Northridge",
+       subtitle = "2019",
+       y = "Sum of Women Participants",
+       x = "Sports",
+       caption = "Source: Equity in Athletics Data Analysis")
+```
+
