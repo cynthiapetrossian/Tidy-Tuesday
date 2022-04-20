@@ -46,6 +46,7 @@ usaplot <- ggplot(data = usa, aes(x = Year, #ggplot - set x as year
   labs(title = "Rate of Deaths Caused By Indoor Pollution in the United States", #add title
        subtitle = "1990-2019", #add subtitle
        caption = "Source: OurWorldInData.org") #add source caption
+usaplot
 ```
 # Making UK Plot
 ```{r UK}
@@ -55,6 +56,7 @@ ukplot <- ggplot(data = uk, aes(x = Year, #ggplot - set x as year
   labs(title = "Rate of Deaths Caused By Indoor Pollution in the United Kingdom", #add title
        subtitle = "1990-2019", #add subtitle
        caption = "Source: OurWorldInData.org") #add source caption
+ukplot
 ```
 
 # Using Patchwork to Join Plots
