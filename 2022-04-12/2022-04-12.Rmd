@@ -1,0 +1,44 @@
+---
+title: '2022-04-12'
+author: "Cynthia Petrossian"
+date: "4/19/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.path = "../Outputs/")
+```
+
+# Load Libraries
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+```
+
+# Read In Data
+```{r}
+indoor_pollution <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-04-12/indoor_pollution.csv')
+view(indoor_pollution)
+```
+
+# Data Wrangling
+```{r}
+usa <- indoor_pollution %>% 
+  filter(Entity == "United States") %>% 
+  rename("Deaths" = "Deaths - Cause: All causes - Risk: Household air pollution from solid fuels - Sex: Both - Age: Age-standardized (Percent)")
+view(usa)
+```
+
+# Making A Plot
+```{r}
+ggplot(data = usa, aes(x = Year,
+                       y = Deaths))+
+  geom_area(fill = "firebrick")+
+  labs(title = "Rate of Deaths Caused By Indoor Pollution in the United States",
+       subtitle = "1990-2019",
+       caption = "Source: OurWorldInData.org")
+```
+
