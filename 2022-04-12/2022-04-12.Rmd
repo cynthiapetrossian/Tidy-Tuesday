@@ -16,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE,
 ```{r}
 library(tidyverse)
 library(tidytuesdayR)
+library(patchwork)
 ```
 
 # Read In Data
@@ -27,18 +28,37 @@ view(indoor_pollution)
 # Data Wrangling
 ```{r}
 usa <- indoor_pollution %>% 
-  filter(Entity == "United States") %>% 
-  rename("Deaths" = "Deaths - Cause: All causes - Risk: Household air pollution from solid fuels - Sex: Both - Age: Age-standardized (Percent)")
+  filter(Entity == "United States") %>% #filter only us data
+  rename("Deaths" = "Deaths - Cause: All causes - Risk: Household air pollution from solid fuels - Sex: Both - Age: Age-standardized (Percent)") #rename deaths... column
 view(usa)
+
+uk <- indoor_pollution %>% 
+  filter(Entity == "United Kingdom") %>% #filter only uk data
+  rename("Deaths" = "Deaths - Cause: All causes - Risk: Household air pollution from solid fuels - Sex: Both - Age: Age-standardized (Percent)") #rename deaths... column
+view(uk)
 ```
 
-# Making A Plot
-```{r}
-ggplot(data = usa, aes(x = Year,
-                       y = Deaths))+
-  geom_area(fill = "firebrick")+
-  labs(title = "Rate of Deaths Caused By Indoor Pollution in the United States",
-       subtitle = "1990-2019",
-       caption = "Source: OurWorldInData.org")
+# Making USA Plot
+```{r USA}
+usaplot <- ggplot(data = usa, aes(x = Year, #ggplot - set x as year
+                       y = Deaths))+ #set y as deaths
+  geom_area(fill = "firebrick")+ #geom to area, fill as firebrick red
+  labs(title = "Rate of Deaths Caused By Indoor Pollution in the United States", #add title
+       subtitle = "1990-2019", #add subtitle
+       caption = "Source: OurWorldInData.org") #add source caption
+```
+# Making UK Plot
+```{r UK}
+ukplot <- ggplot(data = uk, aes(x = Year, #ggplot - set x as year
+                       y = Deaths))+ #set y as deaths
+  geom_area(fill = "firebrick")+ #geom to area, fill as firebrick red
+  labs(title = "Rate of Deaths Caused By Indoor Pollution in the United Kingdom", #add title
+       subtitle = "1990-2019", #add subtitle
+       caption = "Source: OurWorldInData.org") #add source caption
+```
+
+# Using Patchwork to Join Plots
+```{r USA+UK}
+usaplot/ukplot #use patchwork to put plots on top of each other
 ```
 
