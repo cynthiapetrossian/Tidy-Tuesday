@@ -1,0 +1,44 @@
+---
+title: '2022-04-19'
+author: "Cynthia Petrossian"
+date: "4/19/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.path = "../Outputs/")
+```
+
+# Load Libraries
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+library(tidytext)
+library(wordcloud2)
+```
+
+# Read In Data
+```{r}
+big_dave <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-04-19/big_dave.csv')
+times <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-04-19/times.csv')
+view(big_dave)
+view(times)
+```
+
+# Wordcloud of 200 Most Common New York Times Crossword Answers
+```{r top200wordcloud}
+timesanswers <-  times %>% #new object timesanswers
+  filter(!is.na(answer)) %>% #filter out NAs
+  select(answer) #select answer column
+view(timesanswers) #view new object
+
+words<-timesanswers %>% #new object words
+  count(answer) %>% # count all the answers
+  arrange(desc(n))%>% # sort the answers
+  slice(1:200) #take the top 200
+wordcloud2(words, size = .2) #create wordcloud - size .2
+```
+
