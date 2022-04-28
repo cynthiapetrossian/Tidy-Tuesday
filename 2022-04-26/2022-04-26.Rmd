@@ -1,0 +1,63 @@
+---
+title: '2022-04-26'
+author: "Cynthia Petrossian"
+date: "4/27/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load Libraries
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+library(tidytext)
+library(here)
+```
+
+# Read In Data
+```{r}
+hidden_gems <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-04-26/hidden_gems.csv')
+view(hidden_gems)
+```
+
+# Data Analysis
+```{r}
+data <- hidden_gems %>% #create new object data
+  select(title) %>% #select title column
+  mutate(title = str_trim(title) %>% #remove white space
+           str_to_lower()) #turn strings to lowercase
+data #view data
+
+
+data_tokens <- data %>% #create new object
+    unnest_tokens(input = title, output = word) %>% #unnest tokens add a column named word, with the input as the title column words
+    anti_join(stop_words) %>% #remove stop words
+    filter(!str_detect(word, "[^[:alpha:]]")) #keep only letters
+
+data_tokens %>% 
+  count(word, sort = TRUE) #count most common words
+
+sent_word_counts <- data_tokens %>%
+  inner_join(get_sentiments()) %>% #only keep positive or negative words
+  count(word, sentiment, sort = TRUE) #count the words
+
+sent_word_counts #view
+
+sent_word_counts %>%
+  mutate(n = ifelse(sentiment == "negative", -n, n)) %>% #add a column where if the word is negative it makes the count negative
+  mutate(word = reorder(word, n)) %>% # sort it so it goes in descending order
+  ggplot(aes(word, n, fill = sentiment)) + #create plot
+  geom_col() + #geom column
+  coord_flip() + #flip coordinates
+  labs(y = "Contribution to Sentiment",
+       x = "Word",
+       title = "Sentiments of Most Common Words in Kaggle Notebook Titles",
+       fill = "Sentiment")
+
+ggsave(here("2022-04-26", "tt2022-04-26.png"), #saving plot as png
+       width = 7, height = 10) #setting image dimensions as 7 x 10 inches
+```
+
