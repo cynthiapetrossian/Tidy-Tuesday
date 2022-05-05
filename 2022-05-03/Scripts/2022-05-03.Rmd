@@ -1,0 +1,64 @@
+---
+title: '2022-05-03'
+author: "Cynthia Petrossian"
+date: "5/5/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.path = "../Outputs/")
+```
+
+# Load Libraries
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+library(ggbump)
+```
+
+# Read In Data
+```{r}
+capacity <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-05-03/capacity.csv')
+view(capacity)
+wind <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-05-03/wind.csv')
+view(wind)
+solar <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-05-03/solar.csv')
+view(solar)
+average_cost <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-05-03/average_cost.csv')
+view(average_cost)
+```
+
+# Data Analysis
+```{r plot}
+average_cost <- average_cost %>% 
+  rename(Gas = gas_mwh, #rename columns
+         Solar = solar_mwh,
+         Wind = wind_mwh)
+
+longavgcost <- average_cost %>% #create new df
+  pivot_longer(cols = Gas:Wind, #pivot gas-wind columns longer
+               names_to = "power_type", #new column name is power_type and will include gas-wind
+               values_to = "cost") %>% #values go to new column named cost
+  drop_na() #drop all NAs
+
+view(longavgcost) #view new df
+
+ggplot()+ #create ggplot
+  geom_bump(data = longavgcost, #geom bump, using pop data
+            mapping = aes(x = year, #x is year
+                          y = cost, #y is cost
+                          group = power_type, #group by power type
+                          color = power_type, #color by power type
+                          alpha = 1), #alpha is 1
+            smooth = 15, size = 4.25)+ #smooth bump lines to 15 and size is 4.25
+  guides(alpha = FALSE)+ #remove alpha legend
+  labs(title = "Average Cost of Power/Megawatt Hour", #add title
+       subtitle = "2009 - 2021", #add subtitle
+       y = "Average Cost/MWh (USD)", #change y axis title
+       x = "Year", #change x axis title
+       caption = "Source: Berkeley Lab", #add source caption
+       color = "Power Type") #change legend title
+```
